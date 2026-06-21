@@ -1,0 +1,7 @@
+# Candidate documents — never commit personal data
+interview-notes/*
+!interview-notes/.gitkeep
+job-descriptions/*
+!job-descriptions/.gitkeep
+resumes/*
+!resumes/.gitkeep
