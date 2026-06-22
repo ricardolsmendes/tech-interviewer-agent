@@ -1,4 +1,7 @@
-# Candidate documents — never commit personal data
+# Company profile — organisation-specific, not for version control.
+company-profile.md
+
+# Candidate documents — never commit personal data.
 interview-notes/*
 !interview-notes/.gitkeep
 job-descriptions/*
