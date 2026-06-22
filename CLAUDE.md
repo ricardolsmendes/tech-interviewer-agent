@@ -28,11 +28,11 @@ interviewer switches to a new client engagement.
 
 ## Input Folders
 
-| Folder              | Contents                                                      |
-|---------------------|---------------------------------------------------------------|
+| Folder              | Contents                                                         |
+|---------------------|------------------------------------------------------------------|
 | `job-descriptions/` | One or more job description PDFs; optionally `client-profile.md` |
-| `resumes/`          | Candidate resume PDFs                                         |
-| `interview-notes/`  | Post-interview notes in PDF format                            |
+| `resumes/`          | Candidate resume PDFs                                            |
+| `interview-notes/`  | Post-interview notes in PDF format                               |
 
 **Accepted formats: PDF only.** Word documents must be saved as PDF before placing them in the
 folders. Claude Code cannot read `.docx` files.
@@ -46,12 +46,12 @@ context.
 Save analysis results as HTML files, using the source document's filename as a prefix and a
 descriptive suffix. The target folder depends on the analysis type:
 
-| Analysis                 | Folder              | Suffix                        |
-|--------------------------|---------------------|-------------------------------|
-| Skill listing            | `job-descriptions/` | `_skill-listing.html`         |
-| Resume assessment        | `resumes/`          | `_resume-assessment.html`     |
-| Interview questions      | `resumes/`          | `_interview-questions.html`   |
-| Post-interview summary   | `resumes/`          | `_interview-summary.html`     |
+| Analysis                 | Folder              | Suffix                      |
+|--------------------------|---------------------|-----------------------------|
+| Skill listing            | `job-descriptions/` | `_skill-listing.html`       |
+| Resume assessment        | `resumes/`          | `_resume-assessment.html`   |
+| Interview questions      | `resumes/`          | `_interview-questions.html` |
+| Post-interview summary   | `resumes/`          | `_interview-summary.html`   |
 
 For skill assessments, use the JD filename as the prefix
 (e.g. `Senior-Data-Scientist_skill-assessment.html`).
