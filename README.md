@@ -16,7 +16,7 @@ notes.
 ## How to contribute
 
 Please make sure to take a moment and read the [Code of
-Conduct](https://github.com/ricardolsmendes/tech-interviewer-agent/blob/master/.github/CODE_OF_CONDUCT.md).
+Conduct](https://github.com/ricardolsmendes/tech-interviewer-agent/blob/main/.github/CODE_OF_CONDUCT.md).
 
 ### Report issues
 
@@ -30,5 +30,5 @@ well.
 ### Contribute code
 
 Please make sure to read the [Contributing
-Guide](https://github.com/ricardolsmendes/tech-interviewer-agent/blob/master/.github/CONTRIBUTING.md)
+Guide](https://github.com/ricardolsmendes/tech-interviewer-agent/blob/main/.github/CONTRIBUTING.md)
 before making a pull request.
