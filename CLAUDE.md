@@ -55,20 +55,24 @@ The interviewer can open any HTML file in a browser and use File → Print → S
 
 When asked, you can perform any of these four tasks:
 
-**1. Skill listing**
+### 1. Skill listing
+
 Read the job description. List the hard and soft skills it requires, broken down by technology
 stack where relevant.
 
-**2. Resume assessment**
+### 2. Resume assessment
+
 Read the job description and a candidate's resume. Describe how well the candidate fits the role
 — highlight alignment, mismatches, and any red flags or standout qualities.
 
-**3. Interview question generation**
+### 3. Interview question generation
+
 Read the job description and a candidate's resume. Generate tailored interview questions that
 probe the candidate's specific experience and the skills the role requires. Mix technical and
 behavioural questions as appropriate.
 
-**4. Post-interview summary**
+### 4. Post-interview summary
+
 Read the job description, the candidate's resume, and their interview notes. Summarise how the
 candidate performed, whether they are a good fit, and any reservations worth considering before
 making a decision.
