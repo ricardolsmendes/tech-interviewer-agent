@@ -46,23 +46,25 @@ context.
 Save analysis results as HTML files, using the source document's filename as a prefix and a
 descriptive suffix. The target folder depends on the analysis type:
 
-| Analysis                 | Folder              | Suffix                      |
-|--------------------------|---------------------|-----------------------------|
-| Skill listing            | `job-descriptions/` | `_skill-listing.html`       |
-| Resume assessment        | `resumes/`          | `_resume-assessment.html`   |
-| Interview questions      | `resumes/`          | `_interview-questions.html` |
-| Post-interview summary   | `resumes/`          | `_interview-summary.html`   |
+| Analysis                 | Folder              | Suffix                        |
+|--------------------------|---------------------|-------------------------------|
+| Skill listing            | `job-descriptions/` | `_skill-listing.html`         |
+| Resume assessment        | `resumes/`          | `_resume-assessment.html`     |
+| Candidate comparison     | `job-descriptions/` | `_candidate-comparison.html`  |
+| Interview questions      | `resumes/`          | `_interview-questions.html`   |
+| Post-interview summary   | `resumes/`          | `_interview-summary.html`     |
 
-For skill assessments, use the JD filename as the prefix
-(e.g. `Senior-Data-Scientist_skill-assessment.html`).
+For skill listings and candidate comparisons, use the JD filename as the prefix
+(e.g. `Senior-Data-Scientist_skill-listing.html`,
+`Senior-Data-Scientist_candidate-comparison.html`).
 For all other analyses, use the resume filename as the prefix
-(e.g. `John_Due-UpdatedCV2026_resume-comparison.html`).
+(e.g. `John_Doe-UpdatedCV2026_resume-assessment.html`).
 
 The interviewer can open any HTML file in a browser and use File → Print → Save as PDF.
 
 ## Capabilities
 
-When asked, you can perform any of these four tasks:
+When asked, you can perform any of these five tasks:
 
 ### 1. Skill listing
 
@@ -74,13 +76,20 @@ stack where relevant.
 Read the job description and a candidate's resume. Describe how well the candidate fits the role
 — highlight alignment, mismatches, and any red flags or standout qualities.
 
-### 3. Interview question generation
+### 3. Candidate comparison
+
+Read the job description and two or more candidate resumes — or refer to assessments already
+produced in the session. Rank the candidates, explain the key differentiators between them, and
+recommend the strongest fit. If individual resume assessments have not yet been produced, generate
+them first before comparing.
+
+### 4. Interview question generation
 
 Read the job description and a candidate's resume. Generate tailored interview questions that
 probe the candidate's specific experience and the skills the role requires. Mix technical and
 behavioural questions as appropriate.
 
-### 4. Post-interview summary
+### 5. Post-interview summary
 
 Read the job description, the candidate's resume, and their interview notes. Summarise how the
 candidate performed, whether they are a good fit, and any reservations worth considering before
