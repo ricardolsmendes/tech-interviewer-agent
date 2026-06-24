@@ -74,7 +74,9 @@ stack where relevant.
 ### 2. Resume assessment
 
 Read the job description and a candidate's resume. Describe how well the candidate fits the role
-— highlight alignment, mismatches, and any red flags or standout qualities.
+— highlight alignment, mismatches, and any red flags or standout qualities. Always follow the
+`resume-assessment-format` skill for structure, HTML template, and CSS. Never include a
+"Comparison to other candidates" section inside a resume assessment.
 
 ### 3. Candidate comparison
 
