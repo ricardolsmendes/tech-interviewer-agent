@@ -1,0 +1,185 @@
+---
+name: resume-assessment-format
+description: Defines the exact structure, section order, HTML template, and CSS styling to use when producing resume assessments. Apply whenever writing a resume assessment output file.
+---
+
+# Resume Assessment Format
+
+This skill defines the canonical format for resume assessment output files in this project.
+Follow it exactly every time you produce a `_resume-assessment.html` file.
+
+## Structure & Section Order
+
+Every resume assessment must contain the following sections, in this order:
+
+1. **Page header** — candidate name, role, and assessment date
+2. **Verdict badge** — a single colour-coded label summarising the overall fit
+3. **Opening paragraph** — 2–4 sentences summarising the assessment, naming the key strength
+   and the key concern
+4. **Requirements at a Glance** — a table covering every requirement from the JD
+5. **Nice-to-Haves Coverage** — a table covering every nice-to-have from the JD (omit this
+   section only if the JD lists no nice-to-haves)
+6. **What Stands Out** — a green-bordered box with 3–5 bullet points on genuine strengths
+7. **Concerns** — a red-bordered box with bullet points on gaps, risks, or things to validate
+8. **Summary** — a grey-bordered closing paragraph with the hiring recommendation
+
+**Do not add any other sections.** In particular, never include a "Comparison to other
+candidates" section in a resume assessment. Candidate comparisons are a separate capability
+and belong in a dedicated `_candidate-comparison.html` file, not inside individual assessments.
+
+## Verdict Badge
+
+Choose exactly one of the following verdicts based on the overall picture:
+
+| Verdict label                         | Background  | Text        | When to use                                                        |
+|---------------------------------------|-------------|-------------|--------------------------------------------------------------------|
+| Strong fit                            | `#eaf6ea`   | `#1a5c1a`   | Candidate meets virtually all requirements and most nice-to-haves  |
+| Good fit — with [one specific caveat] | `#eaf6ea`   | `#1a5c1a`   | Strong overall but one meaningful thing must be validated          |
+| Partial fit — [reason in a few words] | `#fff3cd`   | `#7d5a00`   | Candidate meets some requirements but has a significant gap        |
+| Not a fit — [reason in a few words]   | `#fdecea`   | `#7d1a1a`   | Candidate does not meet the core requirements of the role          |
+
+The label after the dash in Partial fit and Not a fit should name the gap in plain language,
+e.g. "Partial fit — strong technically, but wrong orientation" or
+"Partial fit — no data domain experience".
+
+## Requirements Table
+
+Each row covers one requirement from the JD. The Status column uses one of three values:
+
+| Status  | Colour | Hex       | When to use                                                     |
+|---------|--------|-----------|-----------------------------------------------------------------|
+| Met     | Green  | `#2a7a2a` | Requirement is clearly evidenced in the resume                  |
+| Partial | Amber  | `#7d5a00` | Some evidence exists but it is incomplete or needs probing      |
+| Not met | Red    | `#c0392b` | No evidence in the resume                                       |
+
+The Evidence column must cite specific roles, dates, tools, or outcomes from the resume —
+never generic statements like "has experience with X".
+
+## Nice-to-Haves Table
+
+Same structure as the Requirements table. Include a Notes column instead of Evidence.
+
+## Standout Box
+
+- Green left border (`#2a7a2a`), light green background (`#eaf6ea`)
+- 3–5 bullet points
+- Each bullet leads with a **bold label** followed by a colon and the explanation
+- Focus on genuine differentiators — avoid restating what is already in the requirements table
+
+## Concerns Box
+
+- Red left border (`#e74c3c`), light red background (`#fdecea`)
+- Bullet points for each gap, risk, or item to probe
+- Each bullet leads with a **bold label** followed by a colon and the explanation
+- Be direct — this section is for the interviewer's eyes and should not soften real issues
+
+## Summary Box
+
+- Grey left border (`#ccc`), light grey background (`#f9f9f9`)
+- One paragraph, 3–5 sentences
+- Ends with a clear hiring recommendation: interview, pass, or conditional on a specific validation
+
+## HTML & CSS Template
+
+Use the following template exactly. Do not alter the CSS, colour values, or class names.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resume Assessment — [Candidate Name] / [Role]</title>
+  <style>
+    body { font-family: Georgia, serif; max-width: 820px; margin: 40px auto; padding: 0 24px; color: #222; line-height: 1.7; }
+    h1 { font-size: 1.6rem; margin-bottom: 4px; }
+    .meta { color: #666; font-size: 0.9rem; margin-bottom: 32px; }
+    h2 { font-size: 1.15rem; border-bottom: 1px solid #ddd; padding-bottom: 4px; margin-top: 36px; }
+    .verdict { display: inline-block; padding: 6px 16px; border-radius: 4px; font-weight: bold; font-size: 1rem; margin-bottom: 24px; }
+    .strong  { background: #eaf6ea; color: #1a5c1a; }
+    .partial { background: #fff3cd; color: #7d5a00; }
+    .no-fit  { background: #fdecea; color: #7d1a1a; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+    th { text-align: left; background: #f5f5f5; padding: 8px 10px; border: 1px solid #ddd; }
+    td { padding: 8px 10px; border: 1px solid #ddd; vertical-align: top; }
+    .met          { color: #2a7a2a; font-weight: bold; }
+    .partial-cell { color: #7d5a00; font-weight: bold; }
+    .gap          { color: #c0392b; font-weight: bold; }
+    ul { margin: 6px 0; padding-left: 20px; }
+    li { margin-bottom: 4px; }
+    .section-note { background: #f9f9f9; border-left: 4px solid #ccc;    padding: 10px 16px; font-size: 0.93rem; margin-top: 8px; }
+    .flag         { background: #fdecea; border-left: 4px solid #e74c3c; padding: 10px 16px; font-size: 0.93rem; margin-top: 8px; }
+    .standout     { background: #eaf6ea; border-left: 4px solid #2a7a2a; padding: 10px 16px; font-size: 0.93rem; margin-top: 8px; }
+  </style>
+</head>
+<body>
+
+  <h1>Resume Assessment</h1>
+  <div class="meta">
+    Candidate: <strong>[Name]</strong> &nbsp;|&nbsp;
+    Role: <strong>[Role — Client (via Company)]</strong> &nbsp;|&nbsp;
+    Assessed: [YYYY-MM-DD]
+  </div>
+
+  <span class="verdict [strong|partial|no-fit]">[Verdict label]</span>
+
+  <p>[Opening paragraph]</p>
+
+  <h2>Requirements at a Glance</h2>
+  <table>
+    <thead>
+      <tr><th>Requirement</th><th>Status</th><th>Evidence from Resume</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>[Requirement]</td>
+        <td class="[met|partial-cell|gap]">[Met|Partial|Not met]</td>
+        <td>[Evidence]</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Nice-to-Haves Coverage</h2>
+  <table>
+    <thead>
+      <tr><th>Nice-to-Have</th><th>Status</th><th>Notes</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>[Nice-to-have]</td>
+        <td class="[met|partial-cell|gap]">[Met|Partial|Not met]</td>
+        <td>[Notes]</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>What Stands Out</h2>
+  <div class="standout">
+    <ul>
+      <li><strong>[Label]:</strong> [Explanation]</li>
+    </ul>
+  </div>
+
+  <h2>Concerns</h2>
+  <div class="flag">
+    <ul>
+      <li><strong>[Label]:</strong> [Explanation]</li>
+    </ul>
+  </div>
+
+  <h2>Summary</h2>
+  <div class="section-note">
+    [Closing paragraph with hiring recommendation]
+  </div>
+
+</body>
+</html>
+```
+
+## What NOT to include
+
+- A "Comparison to other candidates" section — this belongs in a separate
+  `_candidate-comparison.html` file, never inside a resume assessment
+- Scores or numeric ratings
+- Speculative statements not grounded in the resume
+- Praise that duplicates what is already in the requirements table
