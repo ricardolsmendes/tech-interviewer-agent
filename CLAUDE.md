@@ -21,14 +21,14 @@ application input/test fixture data, not as something to analyze directly.
 ```
 src/interviewer/
 ├── cli.py                # Typer app; one subcommand per capability
-├── config.py              # env/.env loading, LLM construction, folder paths, profile loading
-├── io_utils.py             # PDF text extraction, input-file resolution/picking
-├── models.py                # Pydantic schemas for each crew's structured output
-├── crews/                    # one module per capability: agent(s) + task(s) -> Pydantic model
+├── config.py             # env/.env loading, LLM construction, folder paths, profile loading
+├── io_utils.py           # PDF text extraction, input-file resolution/picking
+├── models.py             # Pydantic schemas for each crew's structured output
+├── crews/                # one module per capability: agent(s) + task(s) -> Pydantic model
 └── rendering/
-    ├── render.py               # Jinja2 environment + render_to_file()
-    └── templates/               # one *.html.j2 per capability's output file
-tests/                            # pytest; crew calls are stubbed, no live API calls
+    ├── render.py         # Jinja2 environment + render_to_file()
+    └── templates/        # one *.html.j2 per capability's output file
+tests/                    # pytest; crew calls are stubbed, no live API calls
 ```
 
 Each capability follows the same shape: `cli.py` resolves input PDFs → extracts text via

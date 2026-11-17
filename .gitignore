@@ -1,12 +1,12 @@
-# Company profile — organisation-specific, not for version control.
+# Company profile and client profiles — organisation-specific, not for version control.
 company-profile.md
+!job-descriptions/client-profile-template.md
 
 # Candidate documents — never commit personal data.
 interview-notes/*
 !interview-notes/.gitkeep
 job-descriptions/*
 !job-descriptions/.gitkeep
-!job-descriptions/client-profile-template.md
 resumes/*
 !resumes/.gitkeep
 
