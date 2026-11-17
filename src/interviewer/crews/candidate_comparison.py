@@ -35,7 +35,7 @@ def assess_candidates(jd_text: str, resumes: list[str]) -> list[ResumeAssessment
 
 
 def run(jd_text: str, assessments: list[ResumeAssessment]) -> CandidateComparison:
-    llm = get_llm("opus")
+    llm = get_llm("sonnet")
 
     ranker = Agent(
         role="Hiring Panel Lead",
