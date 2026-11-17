@@ -2,10 +2,10 @@
 
 from __future__ import annotations
 
-from datetime import date
-from pathlib import Path
+import datetime
+import pathlib
 
-from jinja2 import Environment, FileSystemLoader, select_autoescape
+import jinja2
 
 _STATUS_CLASSES = {
     "Met": "met",
@@ -13,19 +13,19 @@ _STATUS_CLASSES = {
     "Not met": "gap",
 }
 
-_TEMPLATES_DIR = Path(__file__).resolve().parent / "templates"
+_TEMPLATES_DIR = pathlib.Path(__file__).resolve().parent / "templates"
 
-_env = Environment(
-    loader=FileSystemLoader(_TEMPLATES_DIR),
-    autoescape=select_autoescape(["html"]),
+_env = jinja2.Environment(
+    loader=jinja2.FileSystemLoader(_TEMPLATES_DIR),
+    autoescape=jinja2.select_autoescape(["html"]),
     trim_blocks=True,
     lstrip_blocks=True,
 )
 _env.filters["status_class"] = lambda status: _STATUS_CLASSES[status]
-_env.globals["today"] = lambda: date.today().isoformat()
+_env.globals["today"] = lambda: datetime.date.today().isoformat()
 
 
-def render_to_file(template_name: str, context: dict, out_path: Path) -> None:
+def render_to_file(template_name: str, context: dict, out_path: pathlib.Path) -> None:
     """Render `template_name` with `context` and write the result to `out_path`."""
     template = _env.get_template(template_name)
     html = template.render(**context)

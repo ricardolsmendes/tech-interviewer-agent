@@ -2,10 +2,9 @@
 
 from __future__ import annotations
 
-from crewai import Agent, Crew, Process, Task
+import crewai
 
-from interviewer.config import get_llm, profile_context
-from interviewer.models import ResumeAssessment
+from interviewer import config, models
 
 _VERDICT_RULES = """
 Choose exactly one verdict and its CSS class:
@@ -18,10 +17,10 @@ Choose exactly one verdict and its CSS class:
 """
 
 
-def run(jd_text: str, resume_text: str) -> ResumeAssessment:
-    llm = get_llm("sonnet")
+def run(jd_text: str, resume_text: str) -> models.ResumeAssessment:
+    llm = config.get_llm("sonnet")
 
-    analyst = Agent(
+    analyst = crewai.Agent(
         role="Technical Recruiter",
         goal="Produce a rigorous, evidence-based assessment of a candidate's fit for a role",
         backstory=(
@@ -33,10 +32,10 @@ def run(jd_text: str, resume_text: str) -> ResumeAssessment:
         verbose=False,
     )
 
-    context = profile_context()
+    context = config.profile_context()
     context_block = f"\n\n{context}" if context else ""
 
-    task = Task(
+    task = crewai.Task(
         description=(
             "Assess how well the candidate's resume fits the job description.\n"
             f"{_VERDICT_RULES}\n"
@@ -54,9 +53,11 @@ def run(jd_text: str, resume_text: str) -> ResumeAssessment:
         ),
         expected_output="A complete ResumeAssessment.",
         agent=analyst,
-        output_pydantic=ResumeAssessment,
+        output_pydantic=models.ResumeAssessment,
     )
 
-    crew = Crew(agents=[analyst], tasks=[task], process=Process.sequential, verbose=False)
+    crew = crewai.Crew(
+        agents=[analyst], tasks=[task], process=crewai.Process.sequential, verbose=False
+    )
     result = crew.kickoff()
     return result.pydantic

@@ -2,12 +2,12 @@
 
 from __future__ import annotations
 
-from collections.abc import Callable
-from pathlib import Path
+import collections.abc
+import pathlib
 
-from pypdf import PdfReader
+import pypdf
 
-Chooser = Callable[[list[Path], str], Path]
+Chooser = collections.abc.Callable[[list[pathlib.Path], str], pathlib.Path]
 
 
 class NoPdfFoundError(RuntimeError):
@@ -17,7 +17,7 @@ class NoPdfFoundError(RuntimeError):
 class AmbiguousPdfError(RuntimeError):
     """Raised when a folder has multiple PDFs and no chooser was supplied."""
 
-    def __init__(self, folder: Path, candidates: list[Path]):
+    def __init__(self, folder: pathlib.Path, candidates: list[pathlib.Path]):
         self.folder = folder
         self.candidates = candidates
         super().__init__(
@@ -26,17 +26,17 @@ class AmbiguousPdfError(RuntimeError):
         )
 
 
-def list_pdfs(folder: Path) -> list[Path]:
+def list_pdfs(folder: pathlib.Path) -> list[pathlib.Path]:
     """Return PDF files directly inside `folder`, sorted by name."""
     return sorted(p for p in folder.glob("*.pdf") if p.is_file())
 
 
 def resolve_file(
-    folder: Path,
+    folder: pathlib.Path,
     label: str,
-    explicit: Path | None = None,
+    explicit: pathlib.Path | None = None,
     chooser: Chooser | None = None,
-) -> Path:
+) -> pathlib.Path:
     """Resolve which PDF to use for `label` (e.g. "job description").
 
     If `explicit` is given it is used as-is. Otherwise `folder` is scanned for PDFs:
@@ -58,8 +58,8 @@ def resolve_file(
     raise AmbiguousPdfError(folder, candidates)
 
 
-def extract_pdf_text(path: Path) -> str:
+def extract_pdf_text(path: pathlib.Path) -> str:
     """Extract and concatenate the text content of every page in a PDF."""
-    reader = PdfReader(str(path))
+    reader = pypdf.PdfReader(str(path))
     pages = [page.extract_text() or "" for page in reader.pages]
     return "\n\n".join(pages).strip()

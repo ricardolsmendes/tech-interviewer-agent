@@ -3,15 +3,15 @@
 from __future__ import annotations
 
 import os
-from pathlib import Path
-from typing import Literal
+import pathlib
+import typing
 
-from crewai import LLM
-from dotenv import load_dotenv
+import crewai
+import dotenv
 
-load_dotenv()
+dotenv.load_dotenv()
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
+PROJECT_ROOT = pathlib.Path(__file__).resolve().parents[2]
 JOB_DESCRIPTIONS_DIR = PROJECT_ROOT / "job-descriptions"
 RESUMES_DIR = PROJECT_ROOT / "resumes"
 INTERVIEW_NOTES_DIR = PROJECT_ROOT / "interview-notes"
@@ -19,7 +19,7 @@ INTERVIEW_NOTES_DIR = PROJECT_ROOT / "interview-notes"
 COMPANY_PROFILE_PATH = PROJECT_ROOT / "company-profile.md"
 CLIENT_PROFILE_PATH = JOB_DESCRIPTIONS_DIR / "client-profile.md"
 
-ModelTier = Literal["small_fast", "haiku", "sonnet", "opus"]
+ModelTier = typing.Literal["small_fast", "haiku", "sonnet", "opus"]
 
 _TIER_ENV_VARS: dict[ModelTier, str] = {
     "small_fast": "ANTHROPIC_SMALL_FAST_MODEL",
@@ -29,7 +29,7 @@ _TIER_ENV_VARS: dict[ModelTier, str] = {
 }
 
 
-def get_llm(tier: ModelTier) -> LLM:
+def get_llm(tier: ModelTier) -> crewai.LLM:
     """Build the Anthropic-native LLM for a given model tier, routed at the private endpoint.
 
     Uses CrewAI's native Anthropic provider (`model="anthropic/<id>"`) pointed at
@@ -66,7 +66,7 @@ def get_llm(tier: ModelTier) -> LLM:
             "fill it in."
         )
 
-    return LLM(
+    return crewai.LLM(
         model=f"anthropic/{model}",
         base_url=base_url,
         api_key="unused",  # placeholder only; nulled out below, never sent on the wire

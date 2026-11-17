@@ -6,14 +6,13 @@ assessments against each other and the job description.
 
 from __future__ import annotations
 
-from crewai import Agent, Crew, Process, Task
+import crewai
 
-from interviewer.config import get_llm
+from interviewer import config, models
 from interviewer.crews import resume_assessment
-from interviewer.models import CandidateComparison, ResumeAssessment
 
 
-def _assessment_summary(assessment: ResumeAssessment) -> str:
+def _assessment_summary(assessment: models.ResumeAssessment) -> str:
     requirements = "\n".join(
         f"  - {row.requirement}: {row.status} ({row.evidence})" for row in assessment.requirements
     )
@@ -29,15 +28,17 @@ def _assessment_summary(assessment: ResumeAssessment) -> str:
     )
 
 
-def assess_candidates(jd_text: str, resumes: list[str]) -> list[ResumeAssessment]:
+def assess_candidates(jd_text: str, resumes: list[str]) -> list[models.ResumeAssessment]:
     """Run the resume-assessment crew for each candidate's resume text."""
     return [resume_assessment.run(jd_text, resume_text) for resume_text in resumes]
 
 
-def run(jd_text: str, assessments: list[ResumeAssessment]) -> CandidateComparison:
-    llm = get_llm("sonnet")
+def run(
+    jd_text: str, assessments: list[models.ResumeAssessment]
+) -> models.CandidateComparison:
+    llm = config.get_llm("sonnet")
 
-    ranker = Agent(
+    ranker = crewai.Agent(
         role="Hiring Panel Lead",
         goal="Rank candidates for the same role and recommend the strongest fit",
         backstory=(
@@ -50,7 +51,7 @@ def run(jd_text: str, assessments: list[ResumeAssessment]) -> CandidateCompariso
 
     assessments_block = "\n\n".join(_assessment_summary(a) for a in assessments)
 
-    task = Task(
+    task = crewai.Task(
         description=(
             "Rank the following candidates for the same role, from strongest to weakest fit. "
             "Explain the key differentiators between them — what actually separates them, not "
@@ -60,9 +61,11 @@ def run(jd_text: str, assessments: list[ResumeAssessment]) -> CandidateCompariso
         ),
         expected_output="A complete CandidateComparison with every candidate ranked.",
         agent=ranker,
-        output_pydantic=CandidateComparison,
+        output_pydantic=models.CandidateComparison,
     )
 
-    crew = Crew(agents=[ranker], tasks=[task], process=Process.sequential, verbose=False)
+    crew = crewai.Crew(
+        agents=[ranker], tasks=[task], process=crewai.Process.sequential, verbose=False
+    )
     result = crew.kickoff()
     return result.pydantic

@@ -2,60 +2,64 @@
 
 from __future__ import annotations
 
-from typing import Literal
+import typing
 
-from pydantic import BaseModel, Field
+import pydantic
 
-Status = Literal["Met", "Partial", "Not met"]
+Status = typing.Literal["Met", "Partial", "Not met"]
 
 
-class StackSkills(BaseModel):
-    stack: str = Field(description="Technology stack or category, e.g. 'Backend', 'Data'")
+class StackSkills(pydantic.BaseModel):
+    stack: str = pydantic.Field(description="Technology stack or category, e.g. 'Backend', 'Data'")
     hard_skills: list[str]
 
 
-class SkillListing(BaseModel):
+class SkillListing(pydantic.BaseModel):
     role: str
     hard_skills_by_stack: list[StackSkills]
     soft_skills: list[str]
 
 
-class RequirementRow(BaseModel):
+class RequirementRow(pydantic.BaseModel):
     requirement: str
     status: Status
-    evidence: str = Field(description="Specific roles, dates, tools, or outcomes from the resume")
+    evidence: str = pydantic.Field(
+        description="Specific roles, dates, tools, or outcomes from the resume"
+    )
 
 
-class NiceToHaveRow(BaseModel):
+class NiceToHaveRow(pydantic.BaseModel):
     nice_to_have: str
     status: Status
     notes: str
 
 
-class BulletItem(BaseModel):
+class BulletItem(pydantic.BaseModel):
     label: str
     explanation: str
 
 
-class ResumeAssessment(BaseModel):
+class ResumeAssessment(pydantic.BaseModel):
     candidate_name: str
     role: str
-    verdict_label: str = Field(
+    verdict_label: str = pydantic.Field(
         description=(
             "One of: 'Strong fit', 'Good fit — <caveat>', 'Partial fit — <reason>', "
             "'Not a fit — <reason>'"
         )
     )
-    verdict_class: Literal["strong", "partial", "no-fit"]
-    opening_paragraph: str = Field(description="2-4 sentences naming the key strength and concern")
+    verdict_class: typing.Literal["strong", "partial", "no-fit"]
+    opening_paragraph: str = pydantic.Field(
+        description="2-4 sentences naming the key strength and concern"
+    )
     requirements: list[RequirementRow]
     nice_to_haves: list[NiceToHaveRow] = []
-    standouts: list[BulletItem] = Field(description="3-5 genuine differentiators")
+    standouts: list[BulletItem] = pydantic.Field(description="3-5 genuine differentiators")
     concerns: list[BulletItem]
-    summary: str = Field(description="3-5 sentences ending with a hiring recommendation")
+    summary: str = pydantic.Field(description="3-5 sentences ending with a hiring recommendation")
 
 
-class RankedCandidate(BaseModel):
+class RankedCandidate(pydantic.BaseModel):
     rank: int
     candidate_name: str
     verdict_label: str
@@ -63,31 +67,35 @@ class RankedCandidate(BaseModel):
     key_risks: list[str]
 
 
-class CandidateComparison(BaseModel):
+class CandidateComparison(pydantic.BaseModel):
     role: str
     ranked_candidates: list[RankedCandidate]
-    differentiators: str = Field(description="Paragraph(s) explaining what sets candidates apart")
-    recommendation: str = Field(description="The strongest fit and why")
+    differentiators: str = pydantic.Field(
+        description="Paragraph(s) explaining what sets candidates apart"
+    )
+    recommendation: str = pydantic.Field(description="The strongest fit and why")
 
 
-class QuestionItem(BaseModel):
+class QuestionItem(pydantic.BaseModel):
     question: str
-    rationale: str = Field(description="What this question probes and why, given the JD/resume")
+    rationale: str = pydantic.Field(
+        description="What this question probes and why, given the JD/resume"
+    )
 
 
-class InterviewQuestions(BaseModel):
+class InterviewQuestions(pydantic.BaseModel):
     candidate_name: str
     role: str
     technical_questions: list[QuestionItem]
     behavioural_questions: list[QuestionItem]
 
 
-class InterviewSummary(BaseModel):
+class InterviewSummary(pydantic.BaseModel):
     candidate_name: str
     role: str
     performance_summary: str
     fit_assessment: str
     reservations: list[str]
-    recommendation: str = Field(
+    recommendation: str = pydantic.Field(
         description="Clear recommendation: hire, pass, or conditional on a specific validation"
     )

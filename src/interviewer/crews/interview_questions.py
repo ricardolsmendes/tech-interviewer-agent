@@ -2,16 +2,15 @@
 
 from __future__ import annotations
 
-from crewai import Agent, Crew, Process, Task
+import crewai
 
-from interviewer.config import get_llm
-from interviewer.models import InterviewQuestions
+from interviewer import config, models
 
 
-def run(jd_text: str, resume_text: str) -> InterviewQuestions:
-    llm = get_llm("haiku")
+def run(jd_text: str, resume_text: str) -> models.InterviewQuestions:
+    llm = config.get_llm("haiku")
 
-    interviewer = Agent(
+    interviewer = crewai.Agent(
         role="Interview Designer",
         goal="Design interview questions that probe a candidate's specific experience",
         backstory=(
@@ -23,7 +22,7 @@ def run(jd_text: str, resume_text: str) -> InterviewQuestions:
         verbose=False,
     )
 
-    task = Task(
+    task = crewai.Task(
         description=(
             "Generate interview questions tailored to this candidate and role. Technical "
             "questions should probe the candidate's specific claimed experience (named "
@@ -35,9 +34,11 @@ def run(jd_text: str, resume_text: str) -> InterviewQuestions:
         ),
         expected_output="A complete InterviewQuestions with technical and behavioural questions.",
         agent=interviewer,
-        output_pydantic=InterviewQuestions,
+        output_pydantic=models.InterviewQuestions,
     )
 
-    crew = Crew(agents=[interviewer], tasks=[task], process=Process.sequential, verbose=False)
+    crew = crewai.Crew(
+        agents=[interviewer], tasks=[task], process=crewai.Process.sequential, verbose=False
+    )
     result = crew.kickoff()
     return result.pydantic

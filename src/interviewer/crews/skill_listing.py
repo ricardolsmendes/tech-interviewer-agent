@@ -2,16 +2,15 @@
 
 from __future__ import annotations
 
-from crewai import Agent, Crew, Process, Task
+import crewai
 
-from interviewer.config import get_llm
-from interviewer.models import SkillListing
+from interviewer import config, models
 
 
-def run(jd_text: str) -> SkillListing:
-    llm = get_llm("small_fast")
+def run(jd_text: str) -> models.SkillListing:
+    llm = config.get_llm("small_fast")
 
-    analyst = Agent(
+    analyst = crewai.Agent(
         role="Job Description Analyst",
         goal="Extract a clear, complete breakdown of the skills a job description requires",
         backstory=(
@@ -22,7 +21,7 @@ def run(jd_text: str) -> SkillListing:
         verbose=False,
     )
 
-    task = Task(
+    task = crewai.Task(
         description=(
             "Read the job description below and list the hard and soft skills it requires. "
             "Group hard skills by technology stack or category (e.g. Backend, Data, Cloud, "
@@ -34,9 +33,11 @@ def run(jd_text: str) -> SkillListing:
             "A SkillListing with the role title, hard skills grouped by stack, and soft skills."
         ),
         agent=analyst,
-        output_pydantic=SkillListing,
+        output_pydantic=models.SkillListing,
     )
 
-    crew = Crew(agents=[analyst], tasks=[task], process=Process.sequential, verbose=False)
+    crew = crewai.Crew(
+        agents=[analyst], tasks=[task], process=crewai.Process.sequential, verbose=False
+    )
     result = crew.kickoff()
     return result.pydantic

@@ -2,16 +2,15 @@
 
 from __future__ import annotations
 
-from crewai import Agent, Crew, Process, Task
+import crewai
 
-from interviewer.config import get_llm, profile_context
-from interviewer.models import InterviewSummary
+from interviewer import config, models
 
 
-def run(jd_text: str, resume_text: str, notes_text: str) -> InterviewSummary:
-    llm = get_llm("sonnet")
+def run(jd_text: str, resume_text: str, notes_text: str) -> models.InterviewSummary:
+    llm = config.get_llm("sonnet")
 
-    summarizer = Agent(
+    summarizer = crewai.Agent(
         role="Hiring Decision Advisor",
         goal="Summarise interview performance and fit so a hiring decision can be made",
         backstory=(
@@ -22,10 +21,10 @@ def run(jd_text: str, resume_text: str, notes_text: str) -> InterviewSummary:
         verbose=False,
     )
 
-    context = profile_context()
+    context = config.profile_context()
     context_block = f"\n\n{context}" if context else ""
 
-    task = Task(
+    task = crewai.Task(
         description=(
             "Summarise how the candidate performed in the interview, whether they are a good "
             "fit for the role, and any reservations worth considering before making a decision. "
@@ -39,9 +38,11 @@ def run(jd_text: str, resume_text: str, notes_text: str) -> InterviewSummary:
         ),
         expected_output="A complete InterviewSummary.",
         agent=summarizer,
-        output_pydantic=InterviewSummary,
+        output_pydantic=models.InterviewSummary,
     )
 
-    crew = Crew(agents=[summarizer], tasks=[task], process=Process.sequential, verbose=False)
+    crew = crewai.Crew(
+        agents=[summarizer], tasks=[task], process=crewai.Process.sequential, verbose=False
+    )
     result = crew.kickoff()
     return result.pydantic
