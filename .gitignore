@@ -9,3 +9,9 @@ job-descriptions/*
 !job-descriptions/client-profile-template.md
 resumes/*
 !resumes/.gitkeep
+
+# Python / uv
+.venv/
+__pycache__/
+*.pyc
+.env

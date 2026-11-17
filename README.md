@@ -1,6 +1,6 @@
 # tech-interviewer-agent
 
-A Claude Agent for tech interviewers.
+A CrewAI-powered assistant for tech interviewers.
 
 This agent helps tech interviewers do their job at scale. It has five main capabilities:
 
@@ -14,25 +14,39 @@ description and the candidate's experience.
 1. After an interview, summarize the candidate's propensity to take the role, given the interview
 notes.
 
+It runs entirely as a CLI, backed by [CrewAI](https://www.crewai.com/) and the Anthropic Claude
+API — no chat session required.
+
+## Setup
+
+1. Install [uv](https://docs.astral.sh/uv/).
+2. Install dependencies: `uv sync`.
+3. Copy `.env.example` to `.env` and set `ANTHROPIC_API_KEY` (and `ANTHROPIC_MODEL` if you want a
+   model other than the default).
+
 ## How to use
 
-Start a Claude Code session in this project directory. Drop the relevant files into the input
-folders and ask the agent in plain language. Here are the usage patterns this agent supports.
+Drop the relevant files into the input folders and run the CLI. Here are the usage patterns this
+agent supports.
 
 ### 1. List skills required for a role
 
-Place the job description PDF in `job-descriptions/` and ask:
+Place the job description PDF in `job-descriptions/`, then run:
 
-> "List the skills required for the Senior Data Engineer role."
+```sh
+uv run interviewer skill-listing
+```
 
 The agent reads the JD and produces a breakdown of required hard and soft skills, saved as
 `job-descriptions/Senior-Data-Engineer_skill-listing.html`.
 
 ### 2. Assess a candidate's fit for a role
 
-Place the job description in `job-descriptions/` and the resume in `resumes/`, then ask:
+Place the job description in `job-descriptions/` and the resume in `resumes/`, then run:
 
-> "How does Alice Johnson fit the Data Analyst role?"
+```sh
+uv run interviewer resume-assessment
+```
 
 The agent reads both files and produces a structured assessment — verdict, requirements
 coverage, standout qualities, concerns, and a hiring recommendation — saved as
@@ -40,18 +54,21 @@ coverage, standout qualities, concerns, and a hiring recommendation — saved as
 
 ### 3. Compare candidates for a role
 
-Once two or more resume assessments have been produced, ask:
+With two or more resumes in `resumes/` and a JD in `job-descriptions/`, run:
 
-> "Of all the candidates you assessed for the Data Engineer role, who has the best fit?"
+```sh
+uv run interviewer compare
+```
 
 The agent ranks the candidates, explains the key differentiators, and recommends the strongest
-fit. If individual assessments have not yet been produced, it will generate them first.
+fit, saved as `job-descriptions/Senior-Data-Engineer_candidate-comparison.html`. It also produces
+(or reuses) each candidate's individual resume assessment along the way.
 
 ### 4. Generate tailored interview questions
 
-After assessing a candidate, ask:
-
-> "Generate interview questions for Bob Smith for the Tech Lead position."
+```sh
+uv run interviewer interview-questions
+```
 
 The agent produces a set of technical and behavioural questions tailored to the candidate's
 specific experience and the role's requirements, saved as
@@ -59,9 +76,11 @@ specific experience and the role's requirements, saved as
 
 ### 5. Summarise post-interview performance
 
-After an interview, place the interviewer's notes in `interview-notes/` and ask:
+After an interview, place the interviewer's notes in `interview-notes/`, then run:
 
-> "Summarise how Carol White performed in the Data Product Manager interview."
+```sh
+uv run interviewer interview-summary
+```
 
 The agent reads the JD, the resume, and the interview notes together and produces a summary
 covering performance, fit, and any reservations worth considering before making a decision,
@@ -71,15 +90,20 @@ saved as `resumes/Carol-White-CV_interview-summary.html`.
 
 ### Tips
 
+- **Accepted formats: PDF only.** Word documents must be saved as PDF before placing them in the
+  folders.
+- **Explicit file paths:** every command accepts `--jd`, `--resume`, `--notes`, or `--resumes`
+  (for `compare`) to pick a specific file instead of relying on folder auto-detection, e.g.
+  `uv run interviewer resume-assessment --jd job-descriptions/JD.pdf --resume resumes/Alice.pdf`.
+- **Multiple files in a folder:** if more than one JD or resume PDF is present and you didn't
+  pass an explicit path, the CLI will ask you to pick one from a numbered list.
 - **Company context:** copy `company-profile-template.md` to `company-profile.md` in the root
-  folder and fill it in. The agent reads it at the start of every session to calibrate
+  folder and fill it in. The agent reads it at the start of every run to calibrate
   assessments to your organisation's hiring priorities.
 - **Client context:** for consultancies placing candidates at a specific client, copy
   `job-descriptions/client-profile-template.md` to `job-descriptions/client-profile.md` and
   fill it in. The agent uses it to refine assessments for that engagement. Replace it whenever
   you switch to a new client.
-- **Multiple files in a folder:** if more than one JD or resume is present, the agent will ask
-  which one to use unless it is obvious from context.
 - **Printing:** any HTML output file can be opened in a browser and saved as PDF via
   File → Print → Save as PDF.
 
