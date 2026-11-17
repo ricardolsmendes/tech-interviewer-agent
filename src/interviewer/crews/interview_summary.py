@@ -9,7 +9,7 @@ from interviewer.models import InterviewSummary
 
 
 def run(jd_text: str, resume_text: str, notes_text: str) -> InterviewSummary:
-    llm = get_llm()
+    llm = get_llm("sonnet")
 
     summarizer = Agent(
         role="Hiring Decision Advisor",

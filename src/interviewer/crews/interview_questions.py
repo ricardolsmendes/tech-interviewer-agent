@@ -9,7 +9,7 @@ from interviewer.models import InterviewQuestions
 
 
 def run(jd_text: str, resume_text: str) -> InterviewQuestions:
-    llm = get_llm()
+    llm = get_llm("haiku")
 
     interviewer = Agent(
         role="Interview Designer",

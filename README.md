@@ -15,14 +15,16 @@ description and the candidate's experience.
 notes.
 
 It runs entirely as a CLI, backed by [CrewAI](https://www.crewai.com/), routed through a private
-LiteLLM endpoint — no chat session required.
+Anthropic-compatible endpoint — no chat session required.
 
 ## Setup
 
 1. Install [uv](https://docs.astral.sh/uv/).
 2. Install dependencies: `uv sync`.
-3. Copy `.env.example` to `.env` and set `LITELLM_BASE_URL`, `LITELLM_API_KEY`, and
-   `LITELLM_MODEL` (the model alias registered on that endpoint).
+3. Copy `.env.example` to `.env` and set `ANTHROPIC_BASE_URL`, `ANTHROPIC_AUTH_TOKEN`, and the
+   model id env vars (`ANTHROPIC_MODEL` as a fallback, plus any of the per-tier
+   `ANTHROPIC_SMALL_FAST_MODEL` / `ANTHROPIC_DEFAULT_HAIKU_MODEL` /
+   `ANTHROPIC_DEFAULT_SONNET_MODEL` / `ANTHROPIC_DEFAULT_OPUS_MODEL` your endpoint serves).
 
 ## How to use
 

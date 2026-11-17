@@ -9,7 +9,7 @@ from interviewer.models import SkillListing
 
 
 def run(jd_text: str) -> SkillListing:
-    llm = get_llm()
+    llm = get_llm("small_fast")
 
     analyst = Agent(
         role="Job Description Analyst",

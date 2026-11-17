@@ -19,7 +19,7 @@ Choose exactly one verdict and its CSS class:
 
 
 def run(jd_text: str, resume_text: str) -> ResumeAssessment:
-    llm = get_llm()
+    llm = get_llm("sonnet")
 
     analyst = Agent(
         role="Technical Recruiter",

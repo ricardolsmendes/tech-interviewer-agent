@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
+from typing import Literal
 
 from crewai import LLM
 from dotenv import load_dotenv
@@ -18,25 +19,58 @@ INTERVIEW_NOTES_DIR = PROJECT_ROOT / "interview-notes"
 COMPANY_PROFILE_PATH = PROJECT_ROOT / "company-profile.md"
 CLIENT_PROFILE_PATH = JOB_DESCRIPTIONS_DIR / "client-profile.md"
 
-_REQUIRED_LITELLM_VARS = ("LITELLM_BASE_URL", "LITELLM_API_KEY", "LITELLM_MODEL")
+ModelTier = Literal["small_fast", "haiku", "sonnet", "opus"]
+
+_TIER_ENV_VARS: dict[ModelTier, str] = {
+    "small_fast": "ANTHROPIC_SMALL_FAST_MODEL",
+    "haiku": "ANTHROPIC_DEFAULT_HAIKU_MODEL",
+    "sonnet": "ANTHROPIC_DEFAULT_SONNET_MODEL",
+    "opus": "ANTHROPIC_DEFAULT_OPUS_MODEL",
+}
 
 
-def get_llm() -> LLM:
-    """Build the LLM shared by all crews, routed through the private LiteLLM endpoint.
+def get_llm(tier: ModelTier) -> LLM:
+    """Build the Anthropic-native LLM for a given model tier, routed at the private endpoint.
 
-    The endpoint is treated as a custom OpenAI-compatible provider: CrewAI's LLM class
-    uses the native OpenAI client whenever `base_url` is set and the model is prefixed
-    with "openai/", regardless of which model the endpoint actually serves.
+    Uses CrewAI's native Anthropic provider (`model="anthropic/<id>"`) pointed at
+    ANTHROPIC_BASE_URL. Auth is ANTHROPIC_AUTH_TOKEN (sent as a Bearer token via
+    `auth_token`), not ANTHROPIC_API_KEY (sent as an `x-api-key` header) — this project's
+    private endpoint requires Bearer auth. CrewAI's native Anthropic provider always
+    requires a non-empty `api_key` field internally before it will build the real client;
+    `client_params` overrides that back to `None` at the point the `anthropic.Anthropic`
+    client is actually constructed, so only `auth_token` is ever sent on the wire.
+
+    `tier` picks which ANTHROPIC_DEFAULT_*_MODEL / ANTHROPIC_SMALL_FAST_MODEL env var
+    supplies the model id; if that var isn't set, falls back to ANTHROPIC_MODEL.
     """
-    missing = [name for name in _REQUIRED_LITELLM_VARS if not os.environ.get(name)]
+    base_url = os.environ.get("ANTHROPIC_BASE_URL")
+    auth_token = os.environ.get("ANTHROPIC_AUTH_TOKEN")
+    missing = [
+        name
+        for name, value in (
+            ("ANTHROPIC_BASE_URL", base_url),
+            ("ANTHROPIC_AUTH_TOKEN", auth_token),
+        )
+        if not value
+    ]
     if missing:
         raise RuntimeError(
             f"{', '.join(missing)} not set. Copy .env.example to .env and fill it in."
         )
+
+    tier_var = _TIER_ENV_VARS[tier]
+    model = os.environ.get(tier_var) or os.environ.get("ANTHROPIC_MODEL")
+    if not model:
+        raise RuntimeError(
+            f"Neither {tier_var} nor ANTHROPIC_MODEL is set. Copy .env.example to .env and "
+            "fill it in."
+        )
+
     return LLM(
-        model=f"openai/{os.environ['LITELLM_MODEL']}",
-        base_url=os.environ["LITELLM_BASE_URL"],
-        api_key=os.environ["LITELLM_API_KEY"],
+        model=f"anthropic/{model}",
+        base_url=base_url,
+        api_key="unused",  # placeholder only; nulled out below, never sent on the wire
+        client_params={"api_key": None, "auth_token": auth_token},
     )
 
 
