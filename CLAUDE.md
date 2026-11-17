@@ -49,6 +49,12 @@ its implementation.
 
 ## Development Conventions
 
+- Imports: use `import <module>` and reference names as `<module>.<name>` — never
+  `from <module> import <name>` for individual types, classes, or functions. This applies to
+  stdlib, third-party, and this project's own `interviewer.*` modules alike. The only exception
+  is `from __future__ import annotations`. (`from pkg import submodule` to import a submodule
+  is fine — e.g. `from interviewer.crews import resume_assessment` — since that imports a
+  module, not an individual name.)
 - Dependency management: `uv` (`uv sync`, `uv add <pkg>`, `uv run <cmd>`).
 - Run tests: `uv run pytest`.
 - Lint: `uv run ruff check src tests`.
