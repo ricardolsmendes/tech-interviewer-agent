@@ -14,15 +14,15 @@ description and the candidate's experience.
 1. After an interview, summarize the candidate's propensity to take the role, given the interview
 notes.
 
-It runs entirely as a CLI, backed by [CrewAI](https://www.crewai.com/) and the Anthropic Claude
-API — no chat session required.
+It runs entirely as a CLI, backed by [CrewAI](https://www.crewai.com/), routed through a private
+LiteLLM endpoint — no chat session required.
 
 ## Setup
 
 1. Install [uv](https://docs.astral.sh/uv/).
 2. Install dependencies: `uv sync`.
-3. Copy `.env.example` to `.env` and set `ANTHROPIC_API_KEY` (and `ANTHROPIC_MODEL` if you want a
-   model other than the default).
+3. Copy `.env.example` to `.env` and set `LITELLM_BASE_URL`, `LITELLM_API_KEY`, and
+   `LITELLM_MODEL` (the model alias registered on that endpoint).
 
 ## How to use
 

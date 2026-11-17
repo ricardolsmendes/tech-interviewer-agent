@@ -18,18 +18,26 @@ INTERVIEW_NOTES_DIR = PROJECT_ROOT / "interview-notes"
 COMPANY_PROFILE_PATH = PROJECT_ROOT / "company-profile.md"
 CLIENT_PROFILE_PATH = JOB_DESCRIPTIONS_DIR / "client-profile.md"
 
-DEFAULT_MODEL = "anthropic/claude-sonnet-4-5-20250929"
+_REQUIRED_LITELLM_VARS = ("LITELLM_BASE_URL", "LITELLM_API_KEY", "LITELLM_MODEL")
 
 
 def get_llm() -> LLM:
-    """Build the Anthropic-backed LLM shared by all crews."""
-    api_key = os.environ.get("ANTHROPIC_API_KEY")
-    if not api_key:
+    """Build the LLM shared by all crews, routed through the private LiteLLM endpoint.
+
+    The endpoint is treated as a custom OpenAI-compatible provider: CrewAI's LLM class
+    uses the native OpenAI client whenever `base_url` is set and the model is prefixed
+    with "openai/", regardless of which model the endpoint actually serves.
+    """
+    missing = [name for name in _REQUIRED_LITELLM_VARS if not os.environ.get(name)]
+    if missing:
         raise RuntimeError(
-            "ANTHROPIC_API_KEY is not set. Copy .env.example to .env and fill it in."
+            f"{', '.join(missing)} not set. Copy .env.example to .env and fill it in."
         )
-    model = os.environ.get("ANTHROPIC_MODEL", DEFAULT_MODEL)
-    return LLM(model=model, api_key=api_key)
+    return LLM(
+        model=f"openai/{os.environ['LITELLM_MODEL']}",
+        base_url=os.environ["LITELLM_BASE_URL"],
+        api_key=os.environ["LITELLM_API_KEY"],
+    )
 
 
 def read_company_profile() -> str | None:
