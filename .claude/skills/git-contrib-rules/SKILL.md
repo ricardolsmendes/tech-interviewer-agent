@@ -1,6 +1,8 @@
 ---
 name: git-contrib-rules
-description: Enforces contribution rules for this repository — feature branches only (no commits to main), and conventional commit message format. Use before committing or when asked to commit changes.
+description: Enforces contribution rules for this repository — feature branches only
+   (no commits to main), and conventional commit message format. Use before committing or when
+   asked to commit changes.
 ---
 
 # Git Contribution Rules
